@@ -16,19 +16,20 @@ jobs:
           distribution: 'adopt'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Start SUT
-        # Запускаем SUT,
-        # имя файла SUT будет отличаться в каждой задаче.
-        # & означает, что в фоновом режиме не блокируем терминал для запуска тестов,
-        # обязательно должен быть для запуска SUT в CI
       - name: Container start
         run: docker-compose up &
       - name: Waiting for Container start
         run: sleep 30
-      - name: Build with Gradle
+      - name: Start SUT
         run: java -jar ./artifacts/app-deadline.jar -P:jdbc.url=jbc:mysql://localhost:3306/app &
+          # Запускаем SUT,
+          # имя файла SUT будет отличаться в каждой задаче.
+          # & означает, что в фоновом режиме не блокируем терминал для запуска тестов,
+          # обязательно должен быть для запуска SUT в CI
+      - name: Build with Gradle
+        run: ./gradlew test --info -Dselenide.headless=true
+
         # Запускаем автотесты
         # Для проектов на базе Selenide необходимо добавить параметр для запуска браузера
         # в headless режиме -Dselenide.headless=true, параметр --info должен остаться
-      - name: Running Tests
-        run: ./gradlew test --info -Dselenide.headless=true
+
