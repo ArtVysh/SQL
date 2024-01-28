@@ -14,12 +14,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
       - name: Container start
         run: docker-compose up &
       - name: Waiting for Container start
         run: sleep 30
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
       - name: Start SUT
         run: java -jar ./artifacts/app-deadline.jar -P:jdbc.url=jbc:mysql://localhost:3306/app &
           # Запускаем SUT,
